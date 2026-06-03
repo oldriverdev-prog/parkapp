@@ -1,0 +1,90 @@
+.card-info {
+  padding: 16px;
+  border-radius: 12px;
+  margin: 8px 0;
+  color: white;
+  min-height: 100px;
+
+  p {
+    margin: 0;
+  }
+
+  p:first-child {
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  p:last-child {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+}
+
+.ingresos {
+  background: #28a745;
+}
+
+.vehiculos {
+  background: #007bff;
+}
+
+.ocupacion {
+  background: #fd7e14;
+}
+
+.tiempo {
+  background: #6f42c1;
+}
+
+.card-info {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+
+.grafica {
+  height: 280px;
+  padding: 24px 16px 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  background: #ffffff;
+  border-radius: 16px;
+  border-bottom: 2px solid #ddd;
+}
+
+.barra-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 200px;          // ← altura fija del contenedor
+  justify-content: flex-end;
+  width: 60px;
+}
+
+.valor {
+  font-size: 11px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #666;
+}
+
+.barra {
+  width: 36px;
+  height: var(--h, 0%);   // ← lee la variable CSS inline
+  background: linear-gradient(to top, #007bff, #6f42c1);
+  border-radius: 6px 6px 0 0;
+  animation: crecer 0.8s cubic-bezier(0.22, 0.68, 0, 1.2) both;
+}
+
+.dia {
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #888;
+  padding-bottom: 12px;
+}
+
+@keyframes crecer {
+  from { height: 0; }
+}

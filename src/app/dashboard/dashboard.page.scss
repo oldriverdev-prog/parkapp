@@ -1,0 +1,19 @@
+.contenedor_espacios{
+    width: 100%;
+    height: 64px;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    border: 1px solid #1d1d1d;
+    border-radius: 12px 12px 12px 12px;
+}
+
+.button-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+
+  ion-button {
+    flex: 1;
+  }
+}

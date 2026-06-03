@@ -1,0 +1,65 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start" >
+      <ion-back-button color="dark" default-href="/tabsmenu/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrar Salida</ion-title>
+    
+  </ion-toolbar>
+  <ion-searchbar placeholder="Custom Placeholder"></ion-searchbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="separador"></div>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Factura de Cobro</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p style="display: flex; justify-content: space-between;
+        font-weight: 200; font-size: 18px;
+      ">
+        {{placa_vehiculo}} <strong>{{tipo_vehiculo}}</strong>
+      </p>
+      <ion-grid>
+        <ion-row>
+          <ion-col><p style="font-weight: 600;">Entrada</p></ion-col>
+          <ion-col>{{hora_ingreso}}</ion-col>
+          <ion-col><p style="font-weight: 600;">Salida</p></ion-col>
+          <ion-col>{{hora_salida}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><p style="font-weight: 600;">Tiempo</p></ion-col>
+          <ion-col>120Min</ion-col>
+          <ion-col><p style="font-weight: 600;">Espacio</p></ion-col>
+          <ion-col>12</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Total a Cobrar</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p style="font-weight: 600; font-size: 28px;" class="ion-text-center">
+        {{total_cobro}} 
+      </p>
+      <p style="font-weight: 200; font-size: 18px;" class="ion-text-center">
+        Tarifa: {{tarifa}} 
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+
+
+  <br>
+   <ion-button expand="block" mode="ios" color="dark" routerLink="/tabsmenu/dashboard">
+      Confirmar Salida y Cobro
+    </ion-button>
+
+</ion-content>

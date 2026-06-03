@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start" >
+      <ion-back-button color="dark" default-href="/tabsmenu/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrar Ingreso</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <h1 class="ion-text-center" style="font-weight: 400; font-size: 64px;">
+    ParkApp
+  </h1>
+  <br>
+
+  <ion-list>
+    <ion-item>
+      <ion-input label="Placa del Vehiculo" labelPlacement="stacked" placeholder="Ingrese la Placa del vehiculo">
+
+      </ion-input>
+    </ion-item>
+    <br>
+
+    <!--Tipo de Vehiculo-->
+    <ion-item>
+      <ion-select label="Tipo de Vehiculo" label-placement="floating">
+        <ion-select-option value="carro">Carro</ion-select-option>
+        <ion-select-option value="camioneta">Camioneta</ion-select-option>
+        <ion-select-option value="camion">Camion</ion-select-option>
+        <ion-select-option value="motocicleta">Motocicleta</ion-select-option>
+        <ion-select-option value="moto">Moto</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+  </ion-list>
+
+
+
+  <!--Fecha y Hora de entrada del Vehiculo-->
+  <ion-datetime></ion-datetime>
+  <br>
+
+  <!--Espacios para asignar a los vehiculos-->
+  <p style="font-weight: 200; font-size: 18px;">Asignar un Espacio</p>
+
+  <div class="parking-grid">
+    <div
+      *ngFor="let espacio of espacios"
+      class="parking-space"
+      [ngClass]="espacio.estado"
+      (click)="cambiarEstado(espacio)"
+    >
+      {{ espacio.numero }}
+    </div>
+  </div>
+
+  <br>
+  <!--campo para observaciones-->
+  <ion-item>
+    <ion-textarea label="Observaciones" labelPlacement="stacked" placeholder="Ingrese las Observaciones (opcional)" 
+    [counter]="true"
+    maxlength="200"
+    [autoGrow]="true">
+
+    </ion-textarea>
+  </ion-item>
+
+  <ion-button expand="block" mode="ios" color="dark">
+    Registrar Ingreso
+  </ion-button>
+
+</ion-content>

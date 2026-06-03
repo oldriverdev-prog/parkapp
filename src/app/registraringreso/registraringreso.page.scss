@@ -1,0 +1,29 @@
+.parking-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.parking-space {
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-weight: bold;
+  color: white;
+}
+
+.libre {
+  background: rgb(201, 201, 201);
+}
+
+.ocupado {
+  background: rgb(34, 34, 34);
+}
+
+.reservado {
+  background: orange;
+  color: black;
+}

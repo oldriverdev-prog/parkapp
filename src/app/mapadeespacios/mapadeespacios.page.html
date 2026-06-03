@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Mapa de Espacios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div class="separador"></div>
+
+  <!--Botones para filtro-->
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" mode="ios" color="dark">
+          Carros
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" mode="ios" color="dark">
+          Motos
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" mode="ios" color="dark">
+          Bicicletas
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!--Grilla de Espacios Disponibles-->
+  <div class="parking-grid">
+    <div
+      *ngFor="let espacio of espacios"
+      class="parking-space"
+      [ngClass]="espacio.estado"
+      (click)="cambiarEstado(espacio)"
+    >
+      {{ espacio.numero }}
+    </div>
+  </div>
+
+  <div class="separador"></div>
+  <p style="font-weight: 200; font-size: 18px; margin-left: 22px;">18 de 30 Disponibles</p>
+</ion-content>
