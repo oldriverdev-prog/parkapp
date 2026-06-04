@@ -11,14 +11,14 @@
       <ion-col>
         <div class="card-info ingresos">
           <p class="ion-text-center">Ingresos Hoy</p>
-          <p class="ion-text-center"><strong>$120.000</strong></p>
+          <p class="ion-text-center"><strong>${{ ingresosHoy.toLocaleString('es-CO') }}</strong></p>
         </div>
       </ion-col>
 
       <ion-col>
         <div class="card-info vehiculos">
           <p class="ion-text-center">Vehículos</p>
-          <p class="ion-text-center"><strong>14</strong></p>
+          <p class="ion-text-center"><strong>{{ vehiculosDentro }}</strong></p>
         </div>
       </ion-col>
     </ion-row>
@@ -27,14 +27,14 @@
       <ion-col>
         <div class="card-info ocupacion">
           <p class="ion-text-center">Ocupación</p>
-          <p class="ion-text-center"><strong>45%</strong></p>
+          <p class="ion-text-center"><strong>{{ ocupacion }}%</strong></p>
         </div>
       </ion-col>
 
       <ion-col>
         <div class="card-info tiempo">
           <p class="ion-text-center">Tiempo promedio</p>
-          <p class="ion-text-center"><strong>1H:48M</strong></p>
+          <p class="ion-text-center"><strong>{{ tiempoPromedio }}</strong></p>
         </div>
       </ion-col>
     </ion-row>
@@ -80,14 +80,12 @@
   <br>
 
   <!--Botones-->
-  <ion-button expand="block" mode="ios" color="dark">
+  <ion-button expand="block" mode="ios" color="dark" routerLink="/tarifas">
     Configurar Tarifa
   </ion-button>
 
-  <ion-button expand="block" mode="ios" color="dark">
+  <ion-button expand="block" mode="ios" color="dark" routerLink="/historial">
     Historial
   </ion-button>
-
-
 
 </ion-content>

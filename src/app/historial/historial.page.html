@@ -1,13 +1,37 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>historial</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historial</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">historial</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-note color="medium" *ngIf="registros.length > 0">
+    {{ registros.length }} registro(s) · {{ dentroCount }} dentro · Total recaudado: ${{ totalRecaudado.toLocaleString('es-CO') }}
+  </ion-note>
+
+  <ion-note color="medium" *ngIf="registros.length === 0">
+    Aún no hay registros.
+  </ion-note>
+
+  <ion-list>
+    <ion-item *ngFor="let r of registros">
+      <ion-label>
+        <h2>
+          {{ r.placa }}
+          <ion-badge *ngIf="r.activo" color="warning">Dentro</ion-badge>
+          <ion-badge *ngIf="!r.activo" color="success">Salió</ion-badge>
+        </h2>
+        <p>{{ r.tipoVehiculo }} · Espacio {{ r.espacio }}</p>
+        <p>Entrada: {{ r.entradaTexto }}</p>
+        <p *ngIf="!r.activo">Salida: {{ r.salidaTexto }}</p>
+        <p>Tiempo: {{ r.tiempoTexto }}</p>
+        <p><strong>{{ r.activo ? 'Cobro actual' : 'Cobro' }}: ${{ r.cobro.toLocaleString('es-CO') }}</strong></p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
 </ion-content>

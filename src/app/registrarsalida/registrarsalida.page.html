@@ -1,65 +1,39 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start" >
-      <ion-back-button color="dark" default-href="/tabsmenu/dashboard"></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
     <ion-title>Registrar Salida</ion-title>
-    
   </ion-toolbar>
-  <ion-searchbar placeholder="Custom Placeholder"></ion-searchbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="separador"></div>
+<ion-content class="ion-padding">
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle>Factura de Cobro</ion-card-subtitle>
-    </ion-card-header>
+  <ion-searchbar
+    placeholder="Buscar por placa"
+    [(ngModel)]="filtro">
+  </ion-searchbar>
 
-    <ion-card-content>
-      <p style="display: flex; justify-content: space-between;
-        font-weight: 200; font-size: 18px;
-      ">
-        {{placa_vehiculo}} <strong>{{tipo_vehiculo}}</strong>
-      </p>
-      <ion-grid>
-        <ion-row>
-          <ion-col><p style="font-weight: 600;">Entrada</p></ion-col>
-          <ion-col>{{hora_ingreso}}</ion-col>
-          <ion-col><p style="font-weight: 600;">Salida</p></ion-col>
-          <ion-col>{{hora_salida}}</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col><p style="font-weight: 600;">Tiempo</p></ion-col>
-          <ion-col>120Min</ion-col>
-          <ion-col><p style="font-weight: 600;">Espacio</p></ion-col>
-          <ion-col>12</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-card-content>
-  </ion-card>
+  <ion-note color="medium" *ngIf="activos.length === 0">
+    No hay vehículos dentro del parqueadero en este momento.
+  </ion-note>
 
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle>Total a Cobrar</ion-card-subtitle>
-    </ion-card-header>
+  <ion-note color="medium" *ngIf="activos.length > 0 && activosFiltrados.length === 0">
+    No se encontró ningún vehículo con esa placa.
+  </ion-note>
 
-    <ion-card-content>
-      <p style="font-weight: 600; font-size: 28px;" class="ion-text-center">
-        {{total_cobro}} 
-      </p>
-      <p style="font-weight: 200; font-size: 18px;" class="ion-text-center">
-        Tarifa: {{tarifa}} 
-      </p>
-    </ion-card-content>
-  </ion-card>
-
-
-
-  <br>
-   <ion-button expand="block" mode="ios" color="dark" routerLink="/tabsmenu/dashboard">
-      Confirmar Salida y Cobro
-    </ion-button>
+  <ion-list>
+    <ion-item *ngFor="let v of activosFiltrados">
+      <ion-label>
+        <h2>{{ v.placa }}</h2>
+        <p>{{ v.tipoVehiculo }} · Espacio {{ v.espacio }}</p>
+        <p>Tiempo: {{ v.tiempoTexto }}</p>
+        <p>Cobro actual: ${{ v.cobroActual.toLocaleString('es-CO') }}</p>
+      </ion-label>
+      <ion-button slot="end" (click)="confirmarSalida(v)">
+        Salida
+      </ion-button>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
