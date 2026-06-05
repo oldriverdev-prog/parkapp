@@ -69,7 +69,7 @@ export class ParqueoService {
   // Tarifas por tipo de vehículo
   async getTarifas(): Promise<Tarifas> {
     await this.init();
-    return (await this.storage.get('tarifas')) ?? { Carro: 3000, Moto: 1500 };
+    return (await this.storage.get('tarifas')) ?? { Carro: 3000, Moto: 1500, Bicicleta: 800 };
   }
 
   async setTarifas(tarifas: Tarifas): Promise<void> {
@@ -94,5 +94,13 @@ export class ParqueoService {
       return false;
     }
     return cuenta.usuario === usuario.trim() && cuenta.clave === clave;
+  }
+
+  // Código secuencial automático para bicicletas (B-001, B-002, ...)
+  async generarCodigoBici(): Promise<string> {
+    const todos = await this.getRegistros();
+    const bicis = todos.filter(r => r.tipoVehiculo === 'Bicicleta');
+    const siguiente = bicis.length + 1;
+    return 'B-' + siguiente.toString().padStart(3, '0');
   }
 }

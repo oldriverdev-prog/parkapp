@@ -16,9 +16,10 @@
   <ion-list>
     <ion-item>
       <ion-input
-        label="Placa"
+        [label]="tipoVehiculo === 'Bicicleta' ? 'Código / Ficha (automático)' : 'Placa'"
         labelPlacement="stacked"
-        placeholder="Ej: ABC123"
+        [placeholder]="tipoVehiculo === 'Bicicleta' ? '' : 'Ej: ABC123'"
+        [readonly]="tipoVehiculo === 'Bicicleta'"
         [(ngModel)]="placa">
       </ion-input>
     </ion-item>
@@ -27,9 +28,11 @@
       <ion-select
         label="Tipo de vehículo"
         labelPlacement="stacked"
-        [(ngModel)]="tipoVehiculo">
+        [(ngModel)]="tipoVehiculo"
+        (ionChange)="onTipoChange()">
         <ion-select-option value="Carro">Carro</ion-select-option>
         <ion-select-option value="Moto">Moto</ion-select-option>
+        <ion-select-option value="Bicicleta">Bicicleta</ion-select-option>
       </ion-select>
     </ion-item>
 

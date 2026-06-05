@@ -1,4 +1,4 @@
-export type TipoVehiculo = 'Carro' | 'Moto';
+export type TipoVehiculo = 'Carro' | 'Moto' | 'Bicicleta';
 
 export interface RegistroParqueo {
   id: string;
@@ -14,6 +14,7 @@ export interface RegistroParqueo {
 export interface Tarifas {
   Carro: number;
   Moto: number;
+  Bicicleta: number;
 }
 
 export interface Cuenta {

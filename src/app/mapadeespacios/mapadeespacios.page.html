@@ -12,24 +12,31 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" mode="ios"
+        <ion-button expand="block" mode="ios" size="small"
           [color]="filtro === 'Todos' ? 'primary' : 'dark'"
           (click)="setFiltro('Todos')">
           Todos
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="block" mode="ios"
+        <ion-button expand="block" mode="ios" size="small"
           [color]="filtro === 'Carro' ? 'primary' : 'dark'"
           (click)="setFiltro('Carro')">
           Carros
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="block" mode="ios"
+        <ion-button expand="block" mode="ios" size="small"
           [color]="filtro === 'Moto' ? 'primary' : 'dark'"
           (click)="setFiltro('Moto')">
           Motos
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" mode="ios" size="small"
+          [color]="filtro === 'Bicicleta' ? 'primary' : 'dark'"
+          (click)="setFiltro('Bicicleta')">
+          Bicis
         </ion-button>
       </ion-col>
     </ion-row>

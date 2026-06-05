@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -22,18 +22,19 @@ import { TipoVehiculo, Tarifas } from '../models/registro.model';
 })
 export class RegistraringresoPage {
 
-  totalEspacios = 20;
+  totalEspacios = 30;
 
   placa = '';
   tipoVehiculo: TipoVehiculo = 'Carro';
   espacio: number | null = null;
 
-  tarifas: Tarifas = { Carro: 3000, Moto: 1500 };
+  tarifas: Tarifas = { Carro: 3000, Moto: 1500, Bicicleta: 800 };
   espaciosLibres: number[] = [];
 
   constructor(
     private parqueoService: ParqueoService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private cdr: ChangeDetectorRef
   ) { }
 
   async ionViewWillEnter() {
@@ -41,9 +42,18 @@ export class RegistraringresoPage {
     await this.cargarEspaciosLibres();
   }
 
-  // tarifa según el tipo de vehículo seleccionado
   get tarifaActual(): number {
     return this.tarifas[this.tipoVehiculo];
+  }
+
+  // al cambiar el tipo: si es bici, el sistema asigna el código
+  async onTipoChange() {
+    if (this.tipoVehiculo === 'Bicicleta') {
+      this.placa = await this.parqueoService.generarCodigoBici();
+    } else {
+      this.placa = '';
+    }
+    this.cdr.detectChanges();
   }
 
   async cargarEspaciosLibres() {
@@ -55,6 +65,7 @@ export class RegistraringresoPage {
         this.espaciosLibres.push(i);
       }
     }
+    this.cdr.detectChanges();
   }
 
   async registrar() {

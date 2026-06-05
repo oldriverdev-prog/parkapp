@@ -28,9 +28,9 @@ interface EspacioVista {
 })
 export class MapadeespaciosPage {
 
-  totalEspacios = 20;
+  totalEspacios = 30;
   espacios: EspacioVista[] = [];
-  filtro: 'Todos' | 'Carro' | 'Moto' = 'Todos';
+  filtro: 'Todos' | 'Carro' | 'Moto' | 'Bicicleta' = 'Todos';
 
   constructor(
     private parqueoService: ParqueoService,
@@ -58,7 +58,7 @@ export class MapadeespaciosPage {
     this.cdr.detectChanges();
   }
 
-  setFiltro(f: 'Todos' | 'Carro' | 'Moto') {
+  setFiltro(f: 'Todos' | 'Carro' | 'Moto' | 'Bicicleta') {
     this.filtro = f;
   }
 

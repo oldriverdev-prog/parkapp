@@ -23,6 +23,7 @@ export class TarifasPage {
 
   tarifaCarro = 0;
   tarifaMoto = 0;
+  tarifaBici = 0;
 
   constructor(
     private parqueoService: ParqueoService,
@@ -34,17 +35,19 @@ export class TarifasPage {
     const t = await this.parqueoService.getTarifas();
     this.tarifaCarro = t.Carro;
     this.tarifaMoto = t.Moto;
+    this.tarifaBici = t.Bicicleta;
     this.cdr.detectChanges();
   }
 
   async guardar() {
-    if (Number(this.tarifaCarro) <= 0 || Number(this.tarifaMoto) <= 0) {
+    if (Number(this.tarifaCarro) <= 0 || Number(this.tarifaMoto) <= 0 || Number(this.tarifaBici) <= 0) {
       this.mostrarMensaje('Las tarifas deben ser mayores a 0.');
       return;
     }
     await this.parqueoService.setTarifas({
       Carro: Number(this.tarifaCarro),
       Moto: Number(this.tarifaMoto),
+      Bicicleta: Number(this.tarifaBici),
     });
     this.mostrarMensaje('Tarifas guardadas correctamente.');
   }

@@ -14,7 +14,7 @@ import { ParqueoService } from '../services/parqueo.service';
 })
 export class PerfilPage {
 
-  totalEspacios = 20;
+  totalEspacios = 30;
 
   ingresosHoy = 0;
   vehiculosDentro = 0;
