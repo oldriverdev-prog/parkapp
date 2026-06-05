@@ -1,13 +1,36 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>registroapp</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Cuenta</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">registroapp</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <p class="ion-text-center">Crea la cuenta del operador</p>
+
+  <ion-list>
+    <ion-item>
+      <ion-input label="Usuario" labelPlacement="stacked" placeholder="Nombre de usuario" [(ngModel)]="usuario"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="password" label="Contraseña" labelPlacement="stacked" [(ngModel)]="clave">
+        <ion-input-password-toggle color="dark" slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="password" label="Confirmar contraseña" labelPlacement="stacked" [(ngModel)]="confirmar">
+        <ion-input-password-toggle color="dark" slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" mode="ios" color="dark" class="ion-margin-top" (click)="registrar()">
+    Crear cuenta
+  </ion-button>
+
 </ion-content>

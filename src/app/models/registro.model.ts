@@ -15,3 +15,8 @@ export interface Tarifas {
   Carro: number;
   Moto: number;
 }
+
+export interface Cuenta {
+  usuario: string;
+  clave: string;
+}

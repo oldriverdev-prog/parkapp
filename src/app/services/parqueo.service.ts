@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { RegistroParqueo, TipoVehiculo, Tarifas } from '../models/registro.model';
+import { RegistroParqueo, TipoVehiculo, Tarifas, Cuenta } from '../models/registro.model';
 
 @Injectable({ providedIn: 'root' })
 export class ParqueoService {
@@ -68,5 +68,24 @@ export class ParqueoService {
   async setTarifas(tarifas: Tarifas): Promise<void> {
     await this.init();
     await this.storage.set('tarifas', tarifas);
+  }
+
+  // Cuenta del operador (login offline)
+  async getCuenta(): Promise<Cuenta | null> {
+    await this.init();
+    return (await this.storage.get('cuenta')) ?? null;
+  }
+
+  async setCuenta(cuenta: Cuenta): Promise<void> {
+    await this.init();
+    await this.storage.set('cuenta', cuenta);
+  }
+
+  async validarLogin(usuario: string, clave: string): Promise<boolean> {
+    const cuenta = await this.getCuenta();
+    if (!cuenta) {
+      return false;
+    }
+    return cuenta.usuario === usuario.trim() && cuenta.clave === clave;
   }
 }
