@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { RegistroParqueo, TipoVehiculo } from '../models/registro.model';
+import { RegistroParqueo, TipoVehiculo, Tarifas } from '../models/registro.model';
 
 @Injectable({ providedIn: 'root' })
 export class ParqueoService {
@@ -57,5 +57,16 @@ export class ParqueoService {
     const fin = new Date(reg.horaSalida ?? new Date().toISOString()).getTime();
     const horas = Math.ceil((fin - inicio) / (1000 * 60 * 60));
     return Math.max(1, horas) * reg.tarifaHora;
+  }
+
+  // Tarifas por tipo de vehículo
+  async getTarifas(): Promise<Tarifas> {
+    await this.init();
+    return (await this.storage.get('tarifas')) ?? { Carro: 3000, Moto: 1500 };
+  }
+
+  async setTarifas(tarifas: Tarifas): Promise<void> {
+    await this.init();
+    await this.storage.set('tarifas', tarifas);
   }
 }

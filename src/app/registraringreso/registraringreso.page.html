@@ -44,16 +44,11 @@
         </ion-select-option>
       </ion-select>
     </ion-item>
-
-    <ion-item>
-      <ion-input
-        type="number"
-        label="Tarifa por hora"
-        labelPlacement="stacked"
-        [(ngModel)]="tarifaHora">
-      </ion-input>
-    </ion-item>
   </ion-list>
+
+  <ion-note color="medium" class="ion-margin-top" style="display: block;">
+    Tarifa a aplicar: ${{ tarifaActual.toLocaleString('es-CO') }} / hora
+  </ion-note>
 
   <ion-button expand="block" class="ion-margin-top" (click)="registrar()">
     Registrar ingreso

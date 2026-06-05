@@ -5,8 +5,13 @@ export interface RegistroParqueo {
   placa: string;
   tipoVehiculo: TipoVehiculo;
   espacio: number;
-  horaIngreso: string;   // fecha ISO
-  horaSalida?: string;   // se llena al salir
+  horaIngreso: string;
+  horaSalida?: string;
   tarifaHora: number;
-  total?: number;        // se calcula al salir
+  total?: number;
+}
+
+export interface Tarifas {
+  Carro: number;
+  Moto: number;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -7,7 +7,7 @@ import {
   ToastController
 } from '@ionic/angular/standalone';
 import { ParqueoService } from '../services/parqueo.service';
-import { TipoVehiculo } from '../models/registro.model';
+import { TipoVehiculo, Tarifas } from '../models/registro.model';
 
 @Component({
   selector: 'app-registraringreso',
@@ -20,16 +20,15 @@ import { TipoVehiculo } from '../models/registro.model';
     CommonModule, FormsModule
   ]
 })
-export class RegistraringresoPage implements OnInit {
+export class RegistraringresoPage {
 
   totalEspacios = 20;
 
-  // datos del formulario
   placa = '';
   tipoVehiculo: TipoVehiculo = 'Carro';
   espacio: number | null = null;
-  tarifaHora = 3000;
 
+  tarifas: Tarifas = { Carro: 3000, Moto: 1500 };
   espaciosLibres: number[] = [];
 
   constructor(
@@ -37,11 +36,14 @@ export class RegistraringresoPage implements OnInit {
     private toastCtrl: ToastController
   ) { }
 
-  ngOnInit() { }
-
-  // se ejecuta cada vez que entras a la página
   async ionViewWillEnter() {
+    this.tarifas = await this.parqueoService.getTarifas();
     await this.cargarEspaciosLibres();
+  }
+
+  // tarifa según el tipo de vehículo seleccionado
+  get tarifaActual(): number {
+    return this.tarifas[this.tipoVehiculo];
   }
 
   async cargarEspaciosLibres() {
@@ -57,25 +59,23 @@ export class RegistraringresoPage implements OnInit {
 
   async registrar() {
     if (!this.placa.trim()) {
-      return this.mostrarMensaje('Ingresa la placa del vehículo.');
+      this.mostrarMensaje('Ingresa la placa del vehículo.');
+      return;
     }
     if (this.espacio === null) {
-      return this.mostrarMensaje('Selecciona un espacio.');
-    }
-    if (!this.tarifaHora || Number(this.tarifaHora) <= 0) {
-      return this.mostrarMensaje('Ingresa una tarifa válida.');
+      this.mostrarMensaje('Selecciona un espacio.');
+      return;
     }
 
     await this.parqueoService.registrarIngreso({
       placa: this.placa,
       tipoVehiculo: this.tipoVehiculo,
       espacio: this.espacio,
-      tarifaHora: Number(this.tarifaHora),
+      tarifaHora: this.tarifaActual,
     });
 
     this.mostrarMensaje(`Ingreso registrado: ${this.placa.toUpperCase()} en el espacio ${this.espacio}.`);
 
-    // limpiar y recargar
     this.placa = '';
     this.tipoVehiculo = 'Carro';
     this.espacio = null;
