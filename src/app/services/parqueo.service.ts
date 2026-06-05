@@ -25,6 +25,13 @@ export class ParqueoService {
     return todos.filter(r => !r.horaSalida);
   }
 
+  // RF-12: ¿ya hay un vehículo activo con esa placa?
+  async existePlacaActiva(placa: string): Promise<boolean> {
+    const activos = await this.getActivos();
+    const normalizada = placa.toUpperCase().trim();
+    return activos.some(r => r.placa === normalizada);
+  }
+
   async registrarIngreso(data: {
     placa: string; tipoVehiculo: TipoVehiculo; espacio: number; tarifaHora: number;
   }): Promise<RegistroParqueo> {

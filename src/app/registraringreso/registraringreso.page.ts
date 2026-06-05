@@ -67,6 +67,12 @@ export class RegistraringresoPage {
       return;
     }
 
+    // RF-12: no permitir placa duplicada entre vehículos activos
+    if (await this.parqueoService.existePlacaActiva(this.placa)) {
+      this.mostrarMensaje(`Ya hay un vehículo activo con la placa ${this.placa.toUpperCase().trim()}.`);
+      return;
+    }
+
     await this.parqueoService.registrarIngreso({
       placa: this.placa,
       tipoVehiculo: this.tipoVehiculo,
