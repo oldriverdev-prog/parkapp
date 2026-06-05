@@ -1,4 +1,4 @@
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +23,8 @@ export class PerfilPage {
 
   constructor(
     private parqueoService: ParqueoService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   async ionViewWillEnter() {
@@ -82,4 +83,8 @@ export class PerfilPage {
       porcentaje: (valor / 250000) * 100
     };
   });
+
+  cerrarSesion() {
+    this.router.navigateByUrl('/login', { replaceUrl: true });
+  }
 }
