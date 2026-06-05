@@ -8,39 +8,49 @@
 
   <div class="separador"></div>
 
-  <!--Botones para filtro-->
+  <!-- Filtros por tipo -->
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" mode="ios" color="dark">
+        <ion-button expand="block" mode="ios"
+          [color]="filtro === 'Todos' ? 'primary' : 'dark'"
+          (click)="setFiltro('Todos')">
+          Todos
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" mode="ios"
+          [color]="filtro === 'Carro' ? 'primary' : 'dark'"
+          (click)="setFiltro('Carro')">
           Carros
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="block" mode="ios" color="dark">
+        <ion-button expand="block" mode="ios"
+          [color]="filtro === 'Moto' ? 'primary' : 'dark'"
+          (click)="setFiltro('Moto')">
           Motos
-        </ion-button>
-      </ion-col>
-      <ion-col>
-        <ion-button expand="block" mode="ios" color="dark">
-          Bicicletas
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <!--Grilla de Espacios Disponibles-->
+  <!-- Grilla de espacios -->
   <div class="parking-grid">
     <div
-      *ngFor="let espacio of espacios"
+      *ngFor="let e of espacios"
       class="parking-space"
-      [ngClass]="espacio.estado"
-      (click)="cambiarEstado(espacio)"
+      [ngClass]="mostrarOcupado(e) ? 'ocupado' : 'libre'"
+      (click)="verEspacio(e)"
+      style="display: flex; flex-direction: column; align-items: center; justify-content: center;"
     >
-      {{ espacio.numero }}
+      <span style="font-size: 1.1em; font-weight: 600;">{{ e.numero }}</span>
+      <small *ngIf="mostrarOcupado(e)" style="font-size: 0.75em; opacity: 0.85; margin-top: 2px;">{{ e.placa }}</small>
     </div>
   </div>
 
   <div class="separador"></div>
-  <p style="font-weight: 200; font-size: 18px; margin-left: 22px;">18 de 30 Disponibles</p>
+  <p style="font-weight: 200; font-size: 18px; margin-left: 22px;">
+    {{ libresCount }} de {{ totalEspacios }} disponibles
+  </p>
 </ion-content>
