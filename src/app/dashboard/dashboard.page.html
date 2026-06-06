@@ -5,42 +5,41 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  
-  <!--Muestra los espacios disponibles-->
-  <div class="contenedor_espacios">
-    <p class="ion-text-center">
-      Espacios Disponibles {{espacios}} : {{total_espacios}}
-    </p>
-  </div>
-  <br>
 
-  <!--Botones para Agregar y quitar vehiculos-->
-  <ion-item lines="none">
-    <div class="button-container">
-      <ion-button expand="block" mode="ios" color="dark" size="large" routerLink="/registraringreso">
-        Ingreso
-      </ion-button>
-      <ion-button expand="block" mode="ios" color="dark" size="large" fill="outline" routerLink="/registrarsalida">
-         Salida
-      </ion-button>
-    </div>    
-  </ion-item>
+  <ion-note color="medium"
+    style="display:block; text-align:center; padding:14px; border:1px solid var(--ion-color-light-shade); border-radius:10px;">
+    Espacios disponibles: {{ libresCount }} / {{ totalEspacios }}
+  </ion-note>
 
-  <!--Lista de Vehiculos Ingresados al Parqueadero-->
+  <ion-grid class="ion-margin-top">
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" mode="ios" color="dark" (click)="irAIngreso()">
+          Ingreso
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" mode="ios" fill="outline" color="dark" (click)="irASalida()">
+          Salida
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <div class="separador"></div>
+  <p style="margin-top: 16px; font-weight: 500;">Últimos registros</p>
+
+  <ion-note color="medium" *ngIf="ultimos.length === 0">
+    Aún no hay registros.
+  </ion-note>
+
   <ion-list>
-    <ion-item-sliding *ngFor="let datos of vehiculos">
-      <ion-item>
-        <ion-label>{{datos.placaVehiculo}} <p>{{datos.tipoVehiculo}}</p></ion-label>
-        <ion-note slot="end">{{datos.fechaIngreso}}</ion-note>
-      </ion-item>
-
-      <ion-item-options>
-        
-        <ion-item-option color="dark">Ver</ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
+    <ion-item *ngFor="let r of ultimos">
+      <ion-label>
+        <h2>{{ r.placa }}</h2>
+        <p>{{ r.tipoVehiculo }} · Espacio {{ r.espacio }}</p>
+      </ion-label>
+      <ion-note slot="end">{{ r.horaTexto }}</ion-note>
+    </ion-item>
   </ion-list>
 
 </ion-content>

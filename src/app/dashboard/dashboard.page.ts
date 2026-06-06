@@ -1,83 +1,73 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonButton, IonList, IonNote, 
-  IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import {
+  IonContent, IonHeader, IonTitle, IonToolbar,
+  IonGrid, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonNote
+} from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { ParqueoService } from '../services/parqueo.service';
+import { RegistroParqueo } from '../models/registro.model';
+
+interface RegistroReciente extends RegistroParqueo {
+  horaTexto: string;
+}
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonButton, IonList, IonNote, 
-    IonItemOption, IonItemOptions, IonItemSliding, IonLabel, CommonModule, FormsModule, RouterLink]
+  imports: [
+    IonContent, IonHeader, IonTitle, IonToolbar,
+    IonGrid, IonRow, IonCol, IonButton, IonList, IonItem, IonLabel, IonNote,
+    CommonModule
+  ]
 })
-export class DashboardPage implements OnInit {
-  
-  //espacios disponibles
-  public espacios:any = 0;
-  //total de espacios parqueadero
-  public total_espacios:any = 50;
+export class DashboardPage {
 
-  //Registro de Vehiculos en el parqueadero
-  public vehiculos: any = {
-        id:'',
-        placaVehiculo:'',
-        tipoVehiculo:'',
-        fechaIngreso:'',
-        horaIngreso:'',
-        fechaSalida:'',
-        horaSalida:''
-      };
+  totalEspacios = 30;
+  libresCount = 0;
+  ultimos: RegistroReciente[] = [];
 
-  constructor() { }
+  constructor(
+    private parqueoService: ParqueoService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) { }
 
-  ngOnInit() {
-    //Cargo la lista de Vehiculos que han ingresado al parqueadero
-    this.cargarListaDeVehiculos();
+  async ionViewWillEnter() {
+    await this.cargar();
   }
 
-  public cargarListaDeVehiculos(){
-    this.vehiculos = [
-      {
-        id:'0',
-        placaVehiculo:'ABC123',
-        tipoVehiculo:'SUV',
-        fechaIngreso:'02/06/2026',
-        horaIngreso:'09:30am',
-        fechaSalida:'00/00/0000',
-        horaSalida:'00/00'
-      },
-      {
-        id:'1',
-        placaVehiculo:'DEF456',
-        tipoVehiculo:'SPORT',
-        fechaIngreso:'02/06/2026',
-        horaIngreso:'10:27am',
-        fechaSalida:'00/00/0000',
-        horaSalida:'00/00'
-      },
-      {
-        id:'2',
-        placaVehiculo:'GHI789',
-        tipoVehiculo:'MOTOCICLETA',
-        fechaIngreso:'02/06/2026',
-        horaIngreso:'10:29am',
-        fechaSalida:'00/00/0000',
-        horaSalida:'00/00'
-      },
-    ]
+  async cargar() {
+    const todos = await this.parqueoService.getRegistros();
+    const activos = todos.filter(r => !r.horaSalida);
+    this.libresCount = this.totalEspacios - activos.length;
+
+    // últimos 5 registros (más recientes primero)
+    const ordenados = [...todos].sort((a, b) =>
+      new Date(b.horaIngreso).getTime() - new Date(a.horaIngreso).getTime()
+    );
+    this.ultimos = ordenados.slice(0, 5).map(r => ({
+      ...r,
+      horaTexto: this.formatearHora(r.horaIngreso),
+    }));
+
+    this.cdr.detectChanges();
   }
 
-  //Registro un ingreso de un vehiculo
-  public registrarIngresoDeVehiculo(){
-
+  irAIngreso() {
+    this.router.navigateByUrl('/registraringreso');
   }
 
-  //Registro la Salida de un vehiculo
-  public registrarSalidaDeVehiculo(){
-
+  irASalida() {
+    this.router.navigateByUrl('/registrarsalida');
   }
 
+  private formatearHora(iso: string): string {
+    return new Date(iso).toLocaleString('es-CO', {
+      day: '2-digit', month: '2-digit',
+      hour: '2-digit', minute: '2-digit',
+    });
+  }
 }
