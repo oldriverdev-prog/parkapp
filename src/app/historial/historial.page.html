@@ -9,16 +9,23 @@
 
 <ion-content class="ion-padding">
 
-  <ion-note color="medium" *ngIf="registros.length > 0">
-    {{ registros.length }} registro(s) · {{ dentroCount }} dentro · Total recaudado: ${{ totalRecaudado.toLocaleString('es-CO') }}
+  <ion-searchbar placeholder="Buscar por placa o ficha" [(ngModel)]="filtroPlaca"></ion-searchbar>
+
+  <ion-item>
+    <ion-input type="date" label="Fecha" labelPlacement="stacked" [(ngModel)]="filtroFecha"></ion-input>
+    <ion-button slot="end" fill="clear" size="small" (click)="filtroFecha = ''">Limpiar</ion-button>
+  </ion-item>
+
+  <ion-note color="medium" *ngIf="registrosFiltrados.length > 0">
+    {{ registrosFiltrados.length }} registro(s) · {{ dentroCount }} dentro · Total: ${{ totalRecaudado.toLocaleString('es-CO') }}
   </ion-note>
 
-  <ion-note color="medium" *ngIf="registros.length === 0">
-    Aún no hay registros.
+  <ion-note color="medium" *ngIf="registrosFiltrados.length === 0">
+    No hay registros que coincidan.
   </ion-note>
 
   <ion-list>
-    <ion-item *ngFor="let r of registros">
+    <ion-item *ngFor="let r of registrosFiltrados">
       <ion-label>
         <h2>
           {{ r.placa }}

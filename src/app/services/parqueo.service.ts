@@ -60,16 +60,21 @@ export class ParqueoService {
   }
 
   calcularTotal(reg: RegistroParqueo): number {
+    const tarifa = Number(reg.tarifaHora);
+    if (!tarifa || isNaN(tarifa)) {
+      return 0;
+    }
     const inicio = new Date(reg.horaIngreso).getTime();
     const fin = new Date(reg.horaSalida ?? new Date().toISOString()).getTime();
     const horas = Math.ceil((fin - inicio) / (1000 * 60 * 60));
-    return Math.max(1, horas) * reg.tarifaHora;
+    return Math.max(1, horas) * tarifa;
   }
 
   // Tarifas por tipo de vehículo
   async getTarifas(): Promise<Tarifas> {
     await this.init();
-    return (await this.storage.get('tarifas')) ?? { Carro: 3000, Moto: 1500, Bicicleta: 800 };
+    const guardadas = await this.storage.get('tarifas');
+    return { Carro: 3000, Moto: 1500, Bicicleta: 800, ...(guardadas ?? {}) };
   }
 
   async setTarifas(tarifas: Tarifas): Promise<void> {

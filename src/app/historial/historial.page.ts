@@ -1,8 +1,9 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-  IonList, IonItem, IonLabel, IonNote, IonBadge
+  IonList, IonItem, IonLabel, IonNote, IonBadge, IonSearchbar, IonInput, IonButton
 } from '@ionic/angular/standalone';
 import { ParqueoService } from '../services/parqueo.service';
 import { RegistroParqueo } from '../models/registro.model';
@@ -22,14 +23,15 @@ interface RegistroVista extends RegistroParqueo {
   standalone: true,
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
-    IonList, IonItem, IonLabel, IonNote, IonBadge, CommonModule
+    IonList, IonItem, IonLabel, IonNote, IonBadge, IonSearchbar, IonInput, IonButton,
+    CommonModule, FormsModule
   ]
 })
 export class HistorialPage {
 
   registros: RegistroVista[] = [];
-  totalRecaudado = 0;
-  dentroCount = 0;
+  filtroPlaca = '';
+  filtroFecha = '';
 
   constructor(
     private parqueoService: ParqueoService,
@@ -43,12 +45,16 @@ export class HistorialPage {
   async cargarHistorial() {
     const todos = await this.parqueoService.getRegistros();
 
-    // más recientes primero (por hora de entrada)
-    todos.sort((a, b) =>
+    // RF-09: solo los últimos 30 días
+    const limite = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const recientes = todos.filter(r => new Date(r.horaIngreso).getTime() >= limite);
+
+    // más recientes primero
+    recientes.sort((a, b) =>
       new Date(b.horaIngreso).getTime() - new Date(a.horaIngreso).getTime()
     );
 
-    this.registros = todos.map(r => {
+    this.registros = recientes.map(r => {
       const activo = !r.horaSalida;
       return {
         ...r,
@@ -60,12 +66,34 @@ export class HistorialPage {
       };
     });
 
-    this.totalRecaudado = todos
-      .filter(r => r.horaSalida)
-      .reduce((sum, r) => sum + (r.total ?? 0), 0);
-    this.dentroCount = todos.filter(r => !r.horaSalida).length;
-
     this.cdr.detectChanges();
+  }
+
+  get registrosFiltrados(): RegistroVista[] {
+    const placa = this.filtroPlaca.trim().toUpperCase();
+    return this.registros.filter(r => {
+      const coincidePlaca = !placa || r.placa.includes(placa);
+      const coincideFecha = !this.filtroFecha || this.fechaLocal(r.horaIngreso) === this.filtroFecha;
+      return coincidePlaca && coincideFecha;
+    });
+  }
+
+  get totalRecaudado(): number {
+    return this.registrosFiltrados
+      .filter(r => !r.activo)
+      .reduce((sum, r) => sum + r.cobro, 0);
+  }
+
+  get dentroCount(): number {
+    return this.registrosFiltrados.filter(r => r.activo).length;
+  }
+
+  private fechaLocal(iso: string): string {
+    const d = new Date(iso);
+    const y = d.getFullYear();
+    const m = (d.getMonth() + 1).toString().padStart(2, '0');
+    const dd = d.getDate().toString().padStart(2, '0');
+    return `${y}-${m}-${dd}`;
   }
 
   formatearFecha(iso: string): string {
