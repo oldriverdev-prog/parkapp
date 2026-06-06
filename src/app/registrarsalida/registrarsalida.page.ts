@@ -78,6 +78,37 @@ export class RegistrarsalidaPage {
     await alert.present();
   }
 
+  async editarPlaca(vehiculo: VehiculoActivo) {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar placa',
+      message: `Espacio ${vehiculo.espacio} · ${vehiculo.tipoVehiculo}`,
+      inputs: [
+        { name: 'placa', type: 'text', value: vehiculo.placa, placeholder: 'Nueva placa' },
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Guardar', handler: (data) => { this.procesarEdicion(vehiculo.id, data.placa); } },
+      ],
+    });
+    await alert.present();
+  }
+
+  async procesarEdicion(id: string, nuevaPlaca: string) {
+    if (!nuevaPlaca || !nuevaPlaca.trim()) {
+      this.mostrarMensaje('La placa no puede estar vacía.');
+      return;
+    }
+    const resultado = await this.parqueoService.editarPlaca(id, nuevaPlaca);
+    if (resultado === 'duplicada') {
+      this.mostrarMensaje('Ya hay otro vehículo activo con esa placa.');
+    } else if (resultado === 'no-encontrado') {
+      this.mostrarMensaje('No se encontró el vehículo.');
+    } else {
+      this.mostrarMensaje('Placa actualizada.');
+    }
+    await this.cargarActivos();
+  }
+
   async procesarSalida(vehiculo: VehiculoActivo) {
     const cerrado = await this.parqueoService.registrarSalida(vehiculo.id);
     await this.cargarActivos();

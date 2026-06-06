@@ -30,6 +30,9 @@
         <p>Tiempo: {{ v.tiempoTexto }}</p>
         <p>Cobro actual: ${{ v.cobroActual.toLocaleString('es-CO') }}</p>
       </ion-label>
+      <ion-button slot="end" fill="outline" size="small" (click)="editarPlaca(v)">
+        Editar
+      </ion-button>
       <ion-button slot="end" (click)="confirmarSalida(v)">
         Salida
       </ion-button>

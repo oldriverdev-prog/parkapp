@@ -108,4 +108,21 @@ export class ParqueoService {
     const siguiente = bicis.length + 1;
     return 'B-' + siguiente.toString().padStart(3, '0');
   }
+
+  // RF-11: editar solo la placa de un vehículo activo (sin tocar la hora de entrada)
+  async editarPlaca(id: string, nuevaPlaca: string): Promise<'ok' | 'duplicada' | 'no-encontrado'> {
+    const registros = await this.getRegistros();
+    const reg = registros.find(r => r.id === id);
+    if (!reg || reg.horaSalida) {
+      return 'no-encontrado';
+    }
+    const normalizada = nuevaPlaca.toUpperCase().trim();
+    const duplicada = registros.some(r => r.id !== id && !r.horaSalida && r.placa === normalizada);
+    if (duplicada) {
+      return 'duplicada';
+    }
+    reg.placa = normalizada;
+    await this.storage.set('registros', registros);
+    return 'ok';
+  }
 }
