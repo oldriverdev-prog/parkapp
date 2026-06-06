@@ -88,9 +88,12 @@ export class ParqueoService {
     return (await this.storage.get('cuenta')) ?? null;
   }
 
-  async setCuenta(cuenta: Cuenta): Promise<void> {
+  // RNF-04: crea la cuenta guardando un hash con salt (no la contraseña en texto plano)
+  async crearCuenta(usuario: string, clave: string): Promise<void> {
     await this.init();
-    await this.storage.set('cuenta', cuenta);
+    const salt = this.generarSalt();
+    const hash = await this.hashClave(clave, salt);
+    await this.storage.set('cuenta', { usuario: usuario.trim(), salt, hash });
   }
 
   async validarLogin(usuario: string, clave: string): Promise<boolean> {
@@ -98,7 +101,19 @@ export class ParqueoService {
     if (!cuenta) {
       return false;
     }
-    return cuenta.usuario === usuario.trim() && cuenta.clave === clave;
+    const hash = await this.hashClave(clave, cuenta.salt);
+    return cuenta.usuario === usuario.trim() && cuenta.hash === hash;
+  }
+
+  private generarSalt(): string {
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  private async hashClave(clave: string, salt: string): Promise<string> {
+    const data = new TextEncoder().encode(salt + clave);
+    const buffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
   // Código secuencial automático para bicicletas (B-001, B-002, ...)

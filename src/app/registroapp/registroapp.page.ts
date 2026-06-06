@@ -41,10 +41,7 @@ export class RegistroappPage {
       this.mostrarMensaje('Las contraseñas no coinciden.');
       return;
     }
-    await this.parqueoService.setCuenta({
-      usuario: this.usuario.trim(),
-      clave: this.clave,
-    });
+    await this.parqueoService.crearCuenta(this.usuario, this.clave);
     this.mostrarMensaje('Cuenta creada. Ya puedes iniciar sesión.');
     this.usuario = '';
     this.clave = '';

@@ -19,5 +19,6 @@ export interface Tarifas {
 
 export interface Cuenta {
   usuario: string;
-  clave: string;
+  salt: string;
+  hash: string;
 }
