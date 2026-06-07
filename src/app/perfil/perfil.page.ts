@@ -16,6 +16,9 @@ export class PerfilPage {
 
   totalEspacios = 30;
 
+  nombreUsuario = '';
+  esAdmin = false;
+
   ingresosHoy = 0;
   vehiculosDentro = 0;
   ocupacion = 0;
@@ -28,6 +31,9 @@ export class PerfilPage {
   ) { }
 
   async ionViewWillEnter() {
+    const sesion = await this.parqueoService.getSesion();
+    this.nombreUsuario = sesion?.usuario ?? '';
+    this.esAdmin = sesion?.rol === 'admin';
     await this.cargarResumen();
   }
 
@@ -36,17 +42,12 @@ export class PerfilPage {
     const activos = todos.filter(r => !r.horaSalida);
     const cerrados = todos.filter(r => r.horaSalida);
 
-    // Ingresos de hoy: cobros de vehículos que salieron hoy
     const salidasHoy = cerrados.filter(r => this.esHoy(r.horaSalida!));
     this.ingresosHoy = salidasHoy.reduce((sum, r) => sum + (r.total ?? 0), 0);
 
-    // Vehículos dentro ahora
     this.vehiculosDentro = activos.length;
-
-    // Ocupación (%)
     this.ocupacion = Math.round((activos.length / this.totalEspacios) * 100);
 
-    // Tiempo promedio de los registros cerrados
     if (cerrados.length > 0) {
       const totalMin = cerrados.reduce((sum, r) => {
         const min = (new Date(r.horaSalida!).getTime() - new Date(r.horaIngreso).getTime()) / 60000;
@@ -74,17 +75,8 @@ export class PerfilPage {
     return h > 0 ? `${h}h ${m}min` : `${m}min`;
   }
 
-  // Gráfica semanal: por ahora decorativa (datos aleatorios)
-  datos = Array.from({ length: 5 }, (_, i) => {
-    const valor = Math.floor(Math.random() * (250000 - 10000 + 1)) + 10000;
-    return {
-      dia: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'][i],
-      valor,
-      porcentaje: (valor / 250000) * 100
-    };
-  });
-
-  cerrarSesion() {
+  async cerrarSesion() {
+    await this.parqueoService.cerrarSesion();
     this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 }

@@ -1,94 +1,102 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>ParkApp - Admin</ion-title>
+    <ion-title>Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
 
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <div class="card-info ingresos">
-          <p class="ion-text-center">Ingresos Hoy</p>
-          <p class="ion-text-center"><strong>${{ ingresosHoy.toLocaleString('es-CO') }}</strong></p>
-        </div>
-      </ion-col>
+  <!-- Usuario en sesión -->
+  <div style="text-align:center; margin-bottom: 12px;">
+    <p style="font-size: 22px; font-weight: 600; margin: 0;">{{ nombreUsuario }}</p>
+    <p style="color: var(--ion-color-medium); margin: 2px 0 0;">
+      {{ esAdmin ? 'Administrador' : 'Operador' }}
+    </p>
+  </div>
 
-      <ion-col>
-        <div class="card-info vehiculos">
-          <p class="ion-text-center">Vehículos</p>
-          <p class="ion-text-center"><strong>{{ vehiculosDentro }}</strong></p>
-        </div>
-      </ion-col>
-    </ion-row>
+  <!-- Panel de administrador -->
+  <div *ngIf="esAdmin">
 
-    <ion-row>
-      <ion-col>
-        <div class="card-info ocupacion">
-          <p class="ion-text-center">Ocupación</p>
-          <p class="ion-text-center"><strong>{{ ocupacion }}%</strong></p>
-        </div>
-      </ion-col>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <div class="card-info ingresos">
+            <p class="ion-text-center">Ingresos Hoy</p>
+            <p class="ion-text-center"><strong>${{ ingresosHoy.toLocaleString('es-CO') }}</strong></p>
+          </div>
+        </ion-col>
+        <ion-col>
+          <div class="card-info vehiculos">
+            <p class="ion-text-center">Vehículos</p>
+            <p class="ion-text-center"><strong>{{ vehiculosDentro }}</strong></p>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div class="card-info ocupacion">
+            <p class="ion-text-center">Ocupación</p>
+            <p class="ion-text-center"><strong>{{ ocupacion }}%</strong></p>
+          </div>
+        </ion-col>
+        <ion-col>
+          <div class="card-info tiempo">
+            <p class="ion-text-center">Tiempo promedio</p>
+            <p class="ion-text-center"><strong>{{ tiempoPromedio }}</strong></p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
-      <ion-col>
-        <div class="card-info tiempo">
-          <p class="ion-text-center">Tiempo promedio</p>
-          <p class="ion-text-center"><strong>{{ tiempoPromedio }}</strong></p>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+    <br>
+    <p style="margin-left: 22px; font-weight: 300; font-size: 18px;">Grafica de Ingresos</p>
 
-  <br>
-  <p style="margin-left: 22px; font-weight: 300; font-size: 18px;">Grafica de Ingresos</p>
-
-  <div class="grafica">
-
-    <div class="barra-container">
-      <span class="valor">$120K</span>
-      <div class="barra" style="--h: 48%;"></div>
-      <span class="dia">Lun</span>
+    <div class="grafica">
+      <div class="barra-container">
+        <span class="valor">$120K</span>
+        <div class="barra" style="--h: 48%;"></div>
+        <span class="dia">Lun</span>
+      </div>
+      <div class="barra-container">
+        <span class="valor">$250K</span>
+        <div class="barra" style="--h: 100%;"></div>
+        <span class="dia">Mar</span>
+      </div>
+      <div class="barra-container">
+        <span class="valor">$180K</span>
+        <div class="barra" style="--h: 72%;"></div>
+        <span class="dia">Mié</span>
+      </div>
+      <div class="barra-container">
+        <span class="valor">$90K</span>
+        <div class="barra" style="--h: 36%;"></div>
+        <span class="dia">Jue</span>
+      </div>
+      <div class="barra-container">
+        <span class="valor">$210K</span>
+        <div class="barra" style="--h: 84%;"></div>
+        <span class="dia">Vie</span>
+      </div>
     </div>
 
-    <div class="barra-container">
-      <span class="valor">$250K</span>
-      <div class="barra" style="--h: 100%;"></div>
-      <span class="dia">Mar</span>
-    </div>
+    <br>
 
-    <div class="barra-container">
-      <span class="valor">$180K</span>
-      <div class="barra" style="--h: 72%;"></div>
-      <span class="dia">Mié</span>
-    </div>
+    <ion-button expand="block" mode="ios" color="dark" routerLink="/tarifas">
+      Configurar Tarifa
+    </ion-button>
 
-    <div class="barra-container">
-      <span class="valor">$90K</span>
-      <div class="barra" style="--h: 36%;"></div>
-      <span class="dia">Jue</span>
-    </div>
+    <ion-button expand="block" mode="ios" color="dark" routerLink="/historial">
+      Historial
+    </ion-button>
 
-    <div class="barra-container">
-      <span class="valor">$210K</span>
-      <div class="barra" style="--h: 84%;"></div>
-      <span class="dia">Vie</span>
-    </div>
+    <ion-button expand="block" mode="ios" color="dark" routerLink="/gestionusuarios">
+      Gestión de Usuarios
+    </ion-button>
 
   </div>
 
-  <br>
-
-  <!--Botones-->
-  <ion-button expand="block" mode="ios" color="dark" routerLink="/tarifas">
-    Configurar Tarifa
-  </ion-button>
-
-  <ion-button expand="block" mode="ios" color="dark" routerLink="/historial">
-    Historial
-  </ion-button>
-
-  <ion-button expand="block" mode="ios" color="danger" (click)="cerrarSesion()">
+  <!-- Cerrar sesión (todos) -->
+  <ion-button expand="block" mode="ios" color="danger" class="ion-margin-top" (click)="cerrarSesion()">
     Cerrar sesión
   </ion-button>
 

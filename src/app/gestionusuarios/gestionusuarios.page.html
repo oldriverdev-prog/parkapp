@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabsmenu/perfil"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-note color="medium">Crea cuentas de operador para tu equipo.</ion-note>
+
+  <ion-list>
+    <ion-item>
+      <ion-input label="Usuario" labelPlacement="stacked" placeholder="ej: operador01" [(ngModel)]="nuevoUsuario"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="password" label="Contraseña" labelPlacement="stacked" [(ngModel)]="nuevaClave"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Rol" labelPlacement="stacked" [(ngModel)]="nuevoRol">
+        <ion-select-option value="operador">Operador</ion-select-option>
+        <ion-select-option value="admin">Administrador</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="crear()">
+    Crear usuario
+  </ion-button>
+
+  <p style="margin-top: 20px; font-weight: 500;">Usuarios registrados</p>
+  <ion-list>
+    <ion-item *ngFor="let u of usuarios">
+      <ion-label>{{ u.usuario }}</ion-label>
+      <ion-badge slot="end" [color]="u.rol === 'admin' ? 'primary' : 'medium'">
+        {{ u.rol === 'admin' ? 'Administrador' : 'Operador' }}
+      </ion-badge>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
