@@ -17,8 +17,17 @@ export interface Tarifas {
   Bicicleta: number;
 }
 
-export interface Cuenta {
+export type Rol = 'admin' | 'operador';
+
+export interface Usuario {
   usuario: string;
   salt: string;
   hash: string;
+  rol: Rol;
+}
+
+export interface Sesion {
+  usuario: string;
+  rol: Rol;
+  inicio: number;
 }

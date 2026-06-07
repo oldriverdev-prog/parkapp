@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { RegistroParqueo, TipoVehiculo, Tarifas, Cuenta } from '../models/registro.model';
+import { RegistroParqueo, TipoVehiculo, Tarifas, Usuario, Sesion, Rol } from '../models/registro.model';
 
 @Injectable({ providedIn: 'root' })
 export class ParqueoService {
   private listo = false;
+  private readonly SESION_MAX_MS = 8 * 60 * 60 * 1000; // 8 horas
 
   constructor(private storage: Storage) {}
 
@@ -82,27 +83,70 @@ export class ParqueoService {
     await this.storage.set('tarifas', tarifas);
   }
 
-  // Cuenta del operador (login offline)
-  async getCuenta(): Promise<Cuenta | null> {
+  // ---- Usuarios (RF-01, RF-02, RNF-04) ----
+  async getUsuarios(): Promise<Usuario[]> {
     await this.init();
-    return (await this.storage.get('cuenta')) ?? null;
+    return (await this.storage.get('usuarios')) ?? [];
   }
 
-  // RNF-04: crea la cuenta guardando un hash con salt (no la contraseña en texto plano)
-  async crearCuenta(usuario: string, clave: string): Promise<void> {
-    await this.init();
+  // siembra un admin por defecto si todavía no hay usuarios
+  async sembrarAdminSiHaceFalta(): Promise<void> {
+    const usuarios = await this.getUsuarios();
+    if (usuarios.length === 0) {
+      const salt = this.generarSalt();
+      const hash = await this.hashClave('admin123', salt);
+      const admin: Usuario = { usuario: 'admin', salt, hash, rol: 'admin' };
+      await this.storage.set('usuarios', [admin]);
+    }
+  }
+
+  async crearUsuario(usuario: string, clave: string, rol: Rol): Promise<'ok' | 'existe'> {
+    const usuarios = await this.getUsuarios();
+    const nombre = usuario.trim();
+    if (usuarios.some(u => u.usuario.toLowerCase() === nombre.toLowerCase())) {
+      return 'existe';
+    }
     const salt = this.generarSalt();
     const hash = await this.hashClave(clave, salt);
-    await this.storage.set('cuenta', { usuario: usuario.trim(), salt, hash });
+    usuarios.push({ usuario: nombre, salt, hash, rol });
+    await this.storage.set('usuarios', usuarios);
+    return 'ok';
   }
 
-  async validarLogin(usuario: string, clave: string): Promise<boolean> {
-    const cuenta = await this.getCuenta();
-    if (!cuenta) {
-      return false;
+  async validarLogin(usuario: string, clave: string): Promise<Usuario | null> {
+    const usuarios = await this.getUsuarios();
+    const nombre = usuario.trim();
+    const u = usuarios.find(x => x.usuario.toLowerCase() === nombre.toLowerCase());
+    if (!u) {
+      return null;
     }
-    const hash = await this.hashClave(clave, cuenta.salt);
-    return cuenta.usuario === usuario.trim() && cuenta.hash === hash;
+    const hash = await this.hashClave(clave, u.salt);
+    return u.hash === hash ? u : null;
+  }
+
+  // ---- Sesión (RF-13, RNF-04) ----
+  async iniciarSesion(u: Usuario): Promise<void> {
+    await this.init();
+    const sesion: Sesion = { usuario: u.usuario, rol: u.rol, inicio: Date.now() };
+    await this.storage.set('sesion', sesion);
+  }
+
+  async getSesion(): Promise<Sesion | null> {
+    await this.init();
+    const sesion: Sesion | null = (await this.storage.get('sesion')) ?? null;
+    if (!sesion) {
+      return null;
+    }
+    if (Date.now() - sesion.inicio > this.SESION_MAX_MS) {
+      await this.cerrarSesion();
+      return null;
+    }
+    return sesion;
+  }
+
+  async cerrarSesion(): Promise<void> {
+    await this.init();
+    await this.storage.remove('sesion');
   }
 
   private generarSalt(): string {

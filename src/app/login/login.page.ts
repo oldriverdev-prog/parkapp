@@ -23,23 +23,27 @@ export class LoginPage {
     private toastCtrl: ToastController
   ) { }
 
+  async ionViewWillEnter() {
+    await this.parqueoService.sembrarAdminSiHaceFalta();
+  }
+
   async login() {
     if (!this.usuario.trim() || !this.clave) {
       this.mostrarMensaje('Ingresa usuario y contraseña.');
       return;
     }
-    const valido = await this.parqueoService.validarLogin(this.usuario, this.clave);
-    if (valido) {
-      this.usuario = '';
-      this.clave = '';
-      this.router.navigateByUrl('/tabsmenu/dashboard');
+    const usuario = await this.parqueoService.validarLogin(this.usuario, this.clave);
+    if (!usuario) {
+      this.mostrarMensaje('Usuario o contraseña incorrectos.');
+      return;
+    }
+    await this.parqueoService.iniciarSesion(usuario);
+    this.usuario = '';
+    this.clave = '';
+    if (usuario.rol === 'admin') {
+      this.router.navigateByUrl('/tabsmenu/perfil');
     } else {
-      const cuenta = await this.parqueoService.getCuenta();
-      if (!cuenta) {
-        this.mostrarMensaje('No hay ninguna cuenta registrada. Crea una primero.');
-      } else {
-        this.mostrarMensaje('Usuario o contraseña incorrectos.');
-      }
+      this.router.navigateByUrl('/tabsmenu/dashboard');
     }
   }
 
