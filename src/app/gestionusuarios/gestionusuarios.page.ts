@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
   IonList, IonItem, IonInput, IonSelect, IonSelectOption, IonButton, IonLabel, IonBadge, IonNote,
-  ToastController
+  ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { ParqueoService } from '../services/parqueo.service';
 import { Usuario, Rol } from '../models/registro.model';
@@ -31,6 +31,7 @@ export class GestionusuariosPage {
   constructor(
     private parqueoService: ParqueoService,
     private toastCtrl: ToastController,
+    private alertCtrl: AlertController,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -61,6 +62,32 @@ export class GestionusuariosPage {
     this.nuevoUsuario = '';
     this.nuevaClave = '';
     this.nuevoRol = 'operador';
+    await this.cargar();
+  }
+
+  async confirmarEliminar(u: Usuario) {
+    const alert = await this.alertCtrl.create({
+      header: 'Eliminar usuario',
+      message: `¿Eliminar a "${u.usuario}"? Esta acción no se puede deshacer.`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Eliminar', role: 'destructive', handler: () => { this.eliminar(u.usuario); } },
+      ],
+    });
+    await alert.present();
+  }
+
+  async eliminar(usuario: string) {
+    const resultado = await this.parqueoService.eliminarUsuario(usuario);
+    if (resultado === 'ultimo-admin') {
+      this.mostrarMensaje('No puedes eliminar al único administrador.');
+      return;
+    }
+    if (resultado === 'no-encontrado') {
+      this.mostrarMensaje('Usuario no encontrado.');
+      return;
+    }
+    this.mostrarMensaje('Usuario eliminado.');
     await this.cargar();
   }
 

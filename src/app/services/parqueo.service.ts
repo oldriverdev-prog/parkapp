@@ -184,4 +184,21 @@ export class ParqueoService {
     await this.storage.set('registros', registros);
     return 'ok';
   }
+
+  async eliminarUsuario(usuario: string): Promise<'ok' | 'ultimo-admin' | 'no-encontrado'> {
+    const usuarios = await this.getUsuarios();
+    const u = usuarios.find(x => x.usuario === usuario);
+    if (!u) {
+      return 'no-encontrado';
+    }
+    if (u.rol === 'admin') {
+      const admins = usuarios.filter(x => x.rol === 'admin');
+      if (admins.length <= 1) {
+        return 'ultimo-admin';
+      }
+    }
+    const restantes = usuarios.filter(x => x.usuario !== usuario);
+    await this.storage.set('usuarios', restantes);
+    return 'ok';
+  }
 }

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboardadmin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reporte de Turno</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-input type="date" label="Fecha del turno" labelPlacement="stacked" [(ngModel)]="fecha" (ionChange)="cargar()"></ion-input>
+  </ion-item>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>Vehículos atendidos</ion-label>
+      <ion-note slot="end"><strong>{{ cantidad }}</strong></ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label>Ingresos totales</ion-label>
+      <ion-note slot="end"><strong>${{ total.toLocaleString('es-CO') }}</strong></ion-note>
+    </ion-item>
+  </ion-list>
+
+  <p style="font-weight: 500; margin-top: 16px;">Desglose por tipo</p>
+  <ion-list>
+    <ion-item *ngFor="let f of porTipo">
+      <ion-label>{{ f.tipo }}</ion-label>
+      <ion-note slot="end">{{ f.cantidad }} veh. · ${{ f.ingresos.toLocaleString('es-CO') }}</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="exportarPDF()">
+    Exportar PDF
+  </ion-button>
+  <ion-button expand="block" fill="outline" (click)="exportarCSV()">
+    Exportar CSV
+  </ion-button>
+
+</ion-content>

@@ -37,6 +37,9 @@
       <ion-badge slot="end" [color]="u.rol === 'admin' ? 'primary' : 'medium'">
         {{ u.rol === 'admin' ? 'Administrador' : 'Operador' }}
       </ion-badge>
+      <ion-button slot="end" fill="clear" color="danger" size="small" (click)="confirmarEliminar(u)">
+        Eliminar
+      </ion-button>
     </ion-item>
   </ion-list>
 
