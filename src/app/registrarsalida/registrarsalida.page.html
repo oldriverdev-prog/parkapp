@@ -28,7 +28,8 @@
         <h2>{{ v.placa }}</h2>
         <p>{{ v.tipoVehiculo }} · Espacio {{ v.espacio }}</p>
         <p>Tiempo: {{ v.tiempoTexto }}</p>
-        <p>Cobro actual: ${{ v.cobroActual.toLocaleString('es-CO') }}</p>
+        <p *ngIf="!v.mensualidadVigente">Cobro actual: ${{ v.cobroActual.toLocaleString('es-CO') }}</p>
+        <p *ngIf="v.mensualidadVigente" style="color: var(--ion-color-success);">Mensualidad vigente — sin cobro</p>
       </ion-label>
       <ion-button slot="end" fill="outline" size="small" (click)="editarPlaca(v)">
         Editar

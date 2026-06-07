@@ -36,7 +36,8 @@
         <p>Entrada: {{ r.entradaTexto }}</p>
         <p *ngIf="!r.activo">Salida: {{ r.salidaTexto }}</p>
         <p>Tiempo: {{ r.tiempoTexto }}</p>
-        <p><strong>{{ r.activo ? 'Cobro actual' : 'Cobro' }}: ${{ r.cobro.toLocaleString('es-CO') }}</strong></p>
+        <p *ngIf="!r.mensualidad"><strong>{{ r.activo ? 'Cobro actual' : 'Cobro' }}: ${{ r.cobro.toLocaleString('es-CO') }}</strong></p>
+        <p *ngIf="r.mensualidad" style="color: var(--ion-color-success);"><strong>Mensualidad — sin cobro</strong></p>
       </ion-label>
     </ion-item>
   </ion-list>

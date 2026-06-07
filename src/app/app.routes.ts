@@ -77,5 +77,10 @@ export const routes: Routes = [
         loadComponent: () => import('./perfil/perfil.page').then( m => m.PerfilPage)
       },
     ]
-  }
+  },
+  {
+    path: 'mensualidades',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./mensualidades/mensualidades.page').then( m => m.MensualidadesPage)
+  },
 ];

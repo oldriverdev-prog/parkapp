@@ -12,6 +12,7 @@ import { RegistroParqueo } from '../models/registro.model';
 interface VehiculoActivo extends RegistroParqueo {
   cobroActual: number;
   tiempoTexto: string;
+  mensualidadVigente: boolean;
 }
 
 @Component({
@@ -43,12 +44,16 @@ export class RegistrarsalidaPage {
 
   async cargarActivos() {
     const activos = await this.parqueoService.getActivos();
-    this.activos = activos.map(r => ({
-      ...r,
-      cobroActual: this.parqueoService.calcularTotal(r),
-      tiempoTexto: this.calcularTiempo(r.horaIngreso),
+    this.activos = await Promise.all(activos.map(async r => {
+      const mensualidadVigente = await this.parqueoService.tieneMensualidadVigente(r.placa);
+      return {
+        ...r,
+        mensualidadVigente,
+        cobroActual: mensualidadVigente ? 0 : this.parqueoService.calcularTotal(r),
+        tiempoTexto: this.calcularTiempo(r.horaIngreso),
+      };
     }));
-    this.cdr.detectChanges(); // fuerza el repintado de la lista
+    this.cdr.detectChanges();
   }
 
   get activosFiltrados(): VehiculoActivo[] {
@@ -67,9 +72,12 @@ export class RegistrarsalidaPage {
   }
 
   async confirmarSalida(vehiculo: VehiculoActivo) {
+    const detalleCobro = vehiculo.mensualidadVigente
+      ? 'Mensualidad vigente — sin cobro'
+      : `Total a cobrar: $${vehiculo.cobroActual.toLocaleString('es-CO')}`;
     const alert = await this.alertCtrl.create({
       header: 'Registrar salida',
-      message: `Placa ${vehiculo.placa} · Espacio ${vehiculo.espacio}. Total a cobrar: $${vehiculo.cobroActual.toLocaleString('es-CO')}`,
+      message: `Placa ${vehiculo.placa} · Espacio ${vehiculo.espacio}. ${detalleCobro}`,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         { text: 'Confirmar', handler: () => { this.procesarSalida(vehiculo); } },
@@ -113,7 +121,10 @@ export class RegistrarsalidaPage {
     const cerrado = await this.parqueoService.registrarSalida(vehiculo.id);
     await this.cargarActivos();
     if (cerrado) {
-      this.mostrarMensaje(`Salida registrada. Cobro: $${(cerrado.total ?? 0).toLocaleString('es-CO')}`);
+      const msg = vehiculo.mensualidadVigente
+        ? 'Salida registrada. Mensualidad vigente — sin cobro.'
+        : `Salida registrada. Cobro: $${(cerrado.total ?? 0).toLocaleString('es-CO')}`;
+      this.mostrarMensaje(msg);
     }
   }
 

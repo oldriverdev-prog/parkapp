@@ -9,6 +9,7 @@ export interface RegistroParqueo {
   horaSalida?: string;
   tarifaHora: number;
   total?: number;
+  mensualidad?: boolean;
 }
 
 export interface Tarifas {
@@ -30,4 +31,13 @@ export interface Sesion {
   usuario: string;
   rol: Rol;
   inicio: number;
+}
+
+export interface Mensualidad {
+  id: string;
+  placa: string;
+  tipoVehiculo: TipoVehiculo;
+  valorMensual: number;
+  fechaInicio: string;
+  fechaFin: string;
 }

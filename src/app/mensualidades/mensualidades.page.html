@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/dashboardadmin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mensualidades</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-note color="medium">Registra vehículos con tarifa mensual y controla su vigencia.</ion-note>
+
+  <ion-list>
+    <ion-item>
+      <ion-input label="Placa" labelPlacement="stacked" placeholder="Ej: ABC123" [(ngModel)]="placa"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select label="Tipo de vehículo" labelPlacement="stacked" [(ngModel)]="tipoVehiculo">
+        <ion-select-option value="Carro">Carro</ion-select-option>
+        <ion-select-option value="Moto">Moto</ion-select-option>
+        <ion-select-option value="Bicicleta">Bicicleta</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-input type="number" label="Valor mensual" labelPlacement="stacked" placeholder="Ej: 150000" [(ngModel)]="valorMensual"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="date" label="Inicio" labelPlacement="stacked" [(ngModel)]="fechaInicio"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="date" label="Fin (vigencia)" labelPlacement="stacked" [(ngModel)]="fechaFin"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" class="ion-margin-top" (click)="registrar()">
+    Registrar mensualidad
+  </ion-button>
+
+  <p style="font-weight: 500; margin-top: 20px;">Mensualidades registradas</p>
+
+  <ion-note color="medium" *ngIf="lista.length === 0">
+    Aún no hay mensualidades.
+  </ion-note>
+
+  <ion-list>
+    <ion-item *ngFor="let m of lista">
+      <ion-label>
+        <h2>{{ m.placa }}</h2>
+        <p>{{ m.tipoVehiculo }} · ${{ m.valorMensual.toLocaleString('es-CO') }}/mes</p>
+        <p>Vigencia: {{ m.fechaInicio }} a {{ m.fechaFin }}</p>
+      </ion-label>
+      <ion-badge slot="end" [color]="m.vigente ? 'success' : 'danger'">
+        {{ m.vigente ? 'Vigente' : 'Vencida' }}
+      </ion-badge>
+      <ion-button slot="end" fill="clear" color="danger" size="small" (click)="confirmarEliminar(m)">
+        Eliminar
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

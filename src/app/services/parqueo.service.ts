@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { RegistroParqueo, TipoVehiculo, Tarifas, Usuario, Sesion, Rol } from '../models/registro.model';
+import { RegistroParqueo, TipoVehiculo, Tarifas, Usuario, Sesion, Rol, Mensualidad } from '../models/registro.model';
 
 @Injectable({ providedIn: 'root' })
 export class ParqueoService {
@@ -55,7 +55,9 @@ export class ParqueoService {
     const reg = registros.find(r => r.id === id);
     if (!reg) return null;
     reg.horaSalida = new Date().toISOString();
-    reg.total = this.calcularTotal(reg);
+    const conMensualidad = await this.tieneMensualidadVigente(reg.placa);
+    reg.mensualidad = conMensualidad;
+    reg.total = conMensualidad ? 0 : this.calcularTotal(reg);
     await this.storage.set('registros', registros);
     return reg;
   }
@@ -200,5 +202,40 @@ export class ParqueoService {
     const restantes = usuarios.filter(x => x.usuario !== usuario);
     await this.storage.set('usuarios', restantes);
     return 'ok';
+  }
+
+  // RF-10: Mensualidades
+  async getMensualidades(): Promise<Mensualidad[]> {
+    await this.init();
+    return (await this.storage.get('mensualidades')) ?? [];
+  }
+
+  async crearMensualidad(data: {
+    placa: string; tipoVehiculo: TipoVehiculo; valorMensual: number; fechaInicio: string; fechaFin: string;
+  }): Promise<void> {
+    const lista = await this.getMensualidades();
+    lista.push({
+      id: Date.now().toString(),
+      placa: data.placa.toUpperCase().trim(),
+      tipoVehiculo: data.tipoVehiculo,
+      valorMensual: data.valorMensual,
+      fechaInicio: data.fechaInicio,
+      fechaFin: data.fechaFin,
+    });
+    await this.storage.set('mensualidades', lista);
+  }
+
+  async eliminarMensualidad(id: string): Promise<void> {
+    const lista = await this.getMensualidades();
+    const restantes = lista.filter(m => m.id !== id);
+    await this.storage.set('mensualidades', restantes);
+  }
+
+  async tieneMensualidadVigente(placa: string): Promise<boolean> {
+    const lista = await this.getMensualidades();
+    const p = placa.toUpperCase().trim();
+    const d = new Date();
+    const hoy = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+    return lista.some(m => m.placa === p && m.fechaFin >= hoy);
   }
 }
