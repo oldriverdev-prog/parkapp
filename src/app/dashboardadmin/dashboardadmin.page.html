@@ -1,13 +1,75 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>dashboardadmin</ion-title>
+    <ion-title>ParkApp - Admin</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">dashboardadmin</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div style="text-align:center; margin-bottom: 14px;">
+    <p style="font-size: 20px; font-weight: 600; margin: 0;">{{ nombreUsuario }}</p>
+    <p style="color: var(--ion-color-medium); margin: 2px 0 0;">Administrador</p>
+  </div>
+
+  <div class="metricas">
+    <div class="card-info ingresos">
+      <p class="etiqueta">Ingresos Hoy</p>
+      <p class="valor">${{ ingresosHoy.toLocaleString('es-CO') }}</p>
+    </div>
+    <div class="card-info vehiculos">
+      <p class="etiqueta">Vehículos</p>
+      <p class="valor">{{ vehiculosDentro }}</p>
+    </div>
+    <div class="card-info ocupacion">
+      <p class="etiqueta">Ocupación</p>
+      <p class="valor">{{ ocupacion }}%</p>
+    </div>
+    <div class="card-info tiempo">
+      <p class="etiqueta">Tiempo promedio</p>
+      <p class="valor">{{ tiempoPromedio }}</p>
+    </div>
+  </div>
+
+  <p style="font-weight: 300; font-size: 18px;">Gráfica de Ingresos</p>
+  <div class="grafica">
+    <div class="barra-container">
+      <span class="valor">$120K</span>
+      <div class="barra" style="--h: 48%;"></div>
+      <span class="dia">Lun</span>
+    </div>
+    <div class="barra-container">
+      <span class="valor">$250K</span>
+      <div class="barra" style="--h: 100%;"></div>
+      <span class="dia">Mar</span>
+    </div>
+    <div class="barra-container">
+      <span class="valor">$180K</span>
+      <div class="barra" style="--h: 72%;"></div>
+      <span class="dia">Mié</span>
+    </div>
+    <div class="barra-container">
+      <span class="valor">$90K</span>
+      <div class="barra" style="--h: 36%;"></div>
+      <span class="dia">Jue</span>
+    </div>
+    <div class="barra-container">
+      <span class="valor">$210K</span>
+      <div class="barra" style="--h: 84%;"></div>
+      <span class="dia">Vie</span>
+    </div>
+  </div>
+
+  <ion-button expand="block" mode="ios" color="dark" routerLink="/tarifas">
+    Configurar Tarifa
+  </ion-button>
+  <ion-button expand="block" mode="ios" color="dark" routerLink="/historial">
+    Historial
+  </ion-button>
+  <ion-button expand="block" mode="ios" color="dark" routerLink="/gestionusuarios">
+    Gestión de Usuarios
+  </ion-button>
+  <ion-button expand="block" mode="ios" color="danger" class="ion-margin-top" (click)="cerrarSesion()">
+    Cerrar sesión
+  </ion-button>
+
 </ion-content>

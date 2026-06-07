@@ -41,7 +41,7 @@ export class LoginPage {
     this.usuario = '';
     this.clave = '';
     if (usuario.rol === 'admin') {
-      this.router.navigateByUrl('/tabsmenu/perfil');
+      this.router.navigateByUrl('/dashboardadmin');
     } else {
       this.router.navigateByUrl('/tabsmenu/dashboard');
     }
