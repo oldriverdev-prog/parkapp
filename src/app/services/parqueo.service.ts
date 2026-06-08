@@ -69,8 +69,11 @@ export class ParqueoService {
     }
     const inicio = new Date(reg.horaIngreso).getTime();
     const fin = new Date(reg.horaSalida ?? new Date().toISOString()).getTime();
-    const horas = Math.ceil((fin - inicio) / (1000 * 60 * 60));
-    return Math.max(1, horas) * tarifa;
+    const minutos = Math.ceil((fin - inicio) / (1000 * 60));
+    // RF-07: cobro por fracción de 15 min, mínimo 1 fracción (primeros 15 min)
+    const fracciones = Math.max(1, Math.ceil(minutos / 15));
+    const tarifaFraccion = tarifa / 4; // 15 min = 1/4 de la tarifa por hora
+    return Math.round(fracciones * tarifaFraccion);
   }
 
   // Tarifas por tipo de vehículo

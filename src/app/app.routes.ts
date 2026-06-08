@@ -38,7 +38,7 @@ export const routes: Routes = [
   },
   {
     path: 'historial',
-    canActivate: [adminGuard],
+    canActivate: [authGuard],
     loadComponent: () => import('./historial/historial.page').then( m => m.HistorialPage)
   },
   {

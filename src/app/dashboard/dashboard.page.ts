@@ -64,6 +64,10 @@ export class DashboardPage {
     this.router.navigateByUrl('/registrarsalida');
   }
 
+  irAHistorial() {
+    this.router.navigateByUrl('/historial');
+  }
+
   private formatearHora(iso: string): string {
     return new Date(iso).toLocaleString('es-CO', {
       day: '2-digit', month: '2-digit',

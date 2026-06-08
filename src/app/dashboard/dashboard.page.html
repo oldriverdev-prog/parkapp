@@ -26,6 +26,10 @@
     </ion-row>
   </ion-grid>
 
+  <ion-button expand="block" mode="ios" fill="outline" color="dark" (click)="irAHistorial()">
+    Ver historial
+  </ion-button>
+
   <p style="margin-top: 16px; font-weight: 500;">Últimos registros</p>
 
   <ion-note color="medium" *ngIf="ultimos.length === 0">
