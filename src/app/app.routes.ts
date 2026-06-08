@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'splash',
     pathMatch: 'full',
   },
   {
@@ -82,5 +82,9 @@ export const routes: Routes = [
     path: 'mensualidades',
     canActivate: [adminGuard],
     loadComponent: () => import('./mensualidades/mensualidades.page').then( m => m.MensualidadesPage)
+  },
+  {
+    path: 'splash',
+    loadComponent: () => import('./splash/splash.page').then( m => m.SplashPage)
   },
 ];
